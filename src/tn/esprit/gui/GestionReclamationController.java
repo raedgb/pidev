@@ -22,11 +22,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -34,6 +37,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.swing.JOptionPane;
@@ -74,6 +78,14 @@ public class GestionReclamationController implements Initializable {
     ReclamationService ds = new ReclamationService();
     Reclamation reclamation = null;
     Connection cnx;
+    @FXML
+    private Button btnmodfier;
+    @FXML
+    private Button btnrefresh;
+    @FXML
+    private Button btnsupprimer;
+    @FXML
+    private Button btnajouter;
 
     public GestionReclamationController() {
 
@@ -94,7 +106,7 @@ public class GestionReclamationController implements Initializable {
 
             while (rs.next()) {
                 reclamationList.add(new Reclamation(
-                        rs.getInt("id"),
+                           rs.getInt("id"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("email"),
@@ -141,53 +153,10 @@ public class GestionReclamationController implements Initializable {
         TableReclamation.setItems(data);
     }
 
-    @FXML
-    private void deleteReclamation(MouseEvent event) {
-        reclamation = TableReclamation.getSelectionModel().getSelectedItem();
-        ReclamationService ds = new ReclamationService();
-        int input = JOptionPane.showConfirmDialog(null, "Voulez vous supprimer !?",
-                "Choisir une option...",
-                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-        if (input == 0) {
-            ds.supprimerReclamation(reclamation.getId());
-
-        } else if (input == 1) {
-
-        }
-
-    }
-
-    @FXML
-    private void UpdateReclamation(MouseEvent event) {
-        reclamation = (Reclamation) TableReclamation.getSelectionModel().getSelectedItem();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../GUI/AjouterReclamation.fxml"));
-        try {
-            loader.load();
-        } catch (IOException ex) {
-            Logger.getLogger(GestionReclamationController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        AjouterReclamationController AjouterreclamationController = loader.getController();
-
-        AjouterreclamationController.setTextField(
-                reclamation.getId(),
-                reclamation.getNom(),
-                reclamation.getPrenom(),
-                reclamation.getEmail(),
-                String.valueOf(reclamation.getTel()),
-                reclamation.getEtat(),
-                reclamation.getDescription(),
-                reclamation.getDate_reclamation());
-        Parent parent = loader.getRoot();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(parent));
-        stage.initStyle(StageStyle.UTILITY);
-        stage.show();
-    }
-
+///////////////////////////////////////////////////////////////////////////
     @FXML
     private void recherche_avance(KeyEvent event) {
-        System.out.println("*******************");
+         System.out.println("*******************");
 
         //System.out.println(id.departement);
          FilteredList<Reclamation> filtereddata = new FilteredList<>(data, b -> true);
@@ -224,53 +193,74 @@ public class GestionReclamationController implements Initializable {
         sorteddata.comparatorProperty().bind(TableReclamation.comparatorProperty());
         TableReclamation.setItems(filtereddata);
     }
+/////////////////////////////////////////////////////
+ 
+ReclamationService rs = new ReclamationService();
 
-   /* @FXML
-    private void exel(MouseEvent event) {
-        WritableWorkbook wworkbook;
-        try {
-            wworkbook = Workbook.createWorkbook(new File("C:\\Users\\LENOVO\\Desktop\\ReclamationExcel.xls"));
+    @FXML
+    private void generatePDF(ActionEvent event) throws IOException {
+         FileChooser fileChooser = new FileChooser();
 
-            String query = "select nom,prenom,email,tel,etat,description,date_reclamation from reclamation";
-            PreparedStatement ste = cnx.prepareStatement(query);
-            ResultSet rs = ste.executeQuery();
-            WritableSheet wsheet = wworkbook.createSheet("First Sheet", 0);
-            Label label = new Label(0, 2, "A label record");
-            wsheet.addCell(label);
-            int i = 0;
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+        fileChooser.getExtensionFilters().add(extFilter);
+      File file = fileChooser.showSaveDialog(uggo.primaryStage);
+        rs.generatePDF(file);
+    }  
 
-            int j = 1;
-            while (rs.next()) {
 
-                i = 0;
 
-                label = new Label(i++, j, j + "");
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("nom"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("prenom"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("email"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("tel"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("etat"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("description"));
-                wsheet.addCell(label);
-                label = new Label(i++, j, rs.getString("date_reclamation"));
-                wsheet.addCell(label);
+    @FXML
+    private void deleteReclamation(MouseEvent event) {
+                reclamation = TableReclamation.getSelectionModel().getSelectedItem();
+        ReclamationService ds = new ReclamationService();
+        int input = JOptionPane.showConfirmDialog(null, "Voulez vous supprimer !?",
+                "Choisir une option...",
+                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+        if (input == 0) {
+            ds.supprimerReclamation(reclamation.getId());
 
-                j++;
-            }
+        } else if (input == 1) {
 
-            wworkbook.write();
-            wworkbook.close();
-            System.out.println("fineshed");
-
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
-*/
+
+    @FXML
+    private void UpdateReclamation(MouseEvent event) {
+    }
+
+    @FXML
+    private void ajouterReclamtion(ActionEvent event) {
+         try {
+            Parent parent = FXMLLoader.load(getClass().getResource("AjouterReclamation.fxml"));
+            Scene scene = new Scene(parent);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(GestionReclamationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        refreshlist();
+    }
+
+    @FXML
+    private void UpdateReclamation(ActionEvent event) {
+    }
+
+    @FXML
+    private void deleteReclamation(ActionEvent event) {
+                        reclamation = TableReclamation.getSelectionModel().getSelectedItem();
+        ReclamationService ds = new ReclamationService();
+        int input = JOptionPane.showConfirmDialog(null, "Voulez vous supprimer !?",
+                "Choisir une option...",
+                JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+        if (input == 0) {
+            ds.supprimerReclamation(reclamation.getId());
+
+        } else if (input == 1) {
+
+        }
+    }
+        
+    
 }

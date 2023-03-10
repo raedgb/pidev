@@ -1,28 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="592.0" prefWidth="832.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.GestionReclamationController">
+<AnchorPane id="AnchorPane" prefHeight="741.0" prefWidth="1089.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.GestionReclamationController">
    <children>
-      <TableView fx:id="TableReclamation" layoutX="111.0" layoutY="99.0" prefHeight="357.0" prefWidth="572.0">
+      <TableView fx:id="TableReclamation" layoutX="80.0" layoutY="177.0" prefHeight="435.0" prefWidth="959.0">
         <columns>
-          <TableColumn fx:id="tblNom" prefWidth="50.0" text="Nom" />
-          <TableColumn fx:id="tblPrenom" prefWidth="75.0" text="Prenom" />
-            <TableColumn fx:id="tblEmail" prefWidth="47.0" text="Email" />
-            <TableColumn fx:id="tblTel" prefWidth="56.0" text="Tel" />
-            <TableColumn fx:id="tblEtat" prefWidth="63.0" text="Etat" />
-            <TableColumn fx:id="tblDescription" prefWidth="122.0" text="Description" />
-            <TableColumn fx:id="tblDateReclamation" prefWidth="158.0" text="Date_Reclamation" />
+          <TableColumn fx:id="tblNom" prefWidth="124.0" style="-fx-background-color: #BDCDD6;" text="Nom" />
+          <TableColumn fx:id="tblPrenom" prefWidth="123.0" style="-fx-background-color: #BDCDD6;" text="Prenom" />
+            <TableColumn fx:id="tblEmail" prefWidth="119.0" style="-fx-background-color: #BDCDD6;" text="Email" />
+            <TableColumn fx:id="tblTel" prefWidth="125.0" style="-fx-background-color: #BDCDD6;" text="Tel" />
+            <TableColumn fx:id="tblEtat" prefWidth="130.0" style="-fx-background-color: #BDCDD6;" text="Etat" />
+            <TableColumn fx:id="tblDescription" prefWidth="164.0" style="-fx-background-color: #BDCDD6;" text="Description" />
+            <TableColumn fx:id="tblDateReclamation" prefWidth="173.0" style="-fx-background-color: #BDCDD6;" text="Date_Reclamation" />
         </columns>
       </TableView>
-      <Button layoutX="405.0" layoutY="492.0" mnemonicParsing="false" onMouseClicked="#UpdateReclamation" text="Modifier" />
-      <TextField fx:id="recherchet" layoutX="111.0" layoutY="61.0" onKeyPressed="#recherche_avance" />
-      <Button layoutX="408.0" layoutY="61.0" mnemonicParsing="false" onAction="#refreshlist" text="Refresh" />
-      <Button layoutX="533.0" layoutY="492.0" mnemonicParsing="false" onMouseClicked="#deleteReclamation" text="Supprimer" />
-      <Button layoutX="273.0" layoutY="492.0" mnemonicParsing="false" onMouseClicked="#exel" text="excel" />
+      <Button fx:id="btnmodfier" layoutX="355.0" layoutY="650.0" mnemonicParsing="false" onAction="#UpdateReclamation" onMouseClicked="#UpdateReclamation" prefHeight="40.0" prefWidth="148.0" style="-fx-background-radius: 50px; -fx-background-color: #252C41;" text="Modifier" textFill="WHITE">
+         <font>
+            <Font size="17.0" />
+         </font></Button>
+      <TextField fx:id="recherchet" layoutX="117.0" layoutY="113.0" onKeyPressed="#recherche_avance" prefHeight="44.0" prefWidth="294.0" style="-fx-background-radius: 50px;" />
+      <Button fx:id="btnrefresh" layoutX="864.0" layoutY="119.0" mnemonicParsing="false" onAction="#refreshlist" prefHeight="40.0" prefWidth="140.0" style="-fx-background-radius: 50px; -fx-background-color: #252C41;" text="Refresh" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <Button fx:id="btnsupprimer" layoutX="586.0" layoutY="650.0" mnemonicParsing="false" onAction="#deleteReclamation" onMouseClicked="#deleteReclamation" prefHeight="40.0" prefWidth="148.0" style="-fx-background-color: #252C41; -fx-background-radius: 50px;" text="Supprimer" textFill="WHITE">
+         <font>
+            <Font size="17.0" />
+         </font></Button>
+      <Button layoutX="823.0" layoutY="648.0" mnemonicParsing="false" onAction="#generatePDF" prefHeight="40.0" prefWidth="148.0" style="-fx-background-radius: 50px; -fx-background-color: #252C41;" text="Générer PDF" textFill="WHITE">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="40.0" fitWidth="33.0" layoutX="368.0" layoutY="119.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/téléchargement.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnajouter" layoutX="117.0" layoutY="648.0" mnemonicParsing="false" onAction="#ajouterReclamtion" prefHeight="44.0" prefWidth="148.0" style="-fx-background-color: #252C41; -fx-background-radius: 50px;" text="Ajouter" textFill="#f8f8f8">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+      <Label layoutX="401.0" layoutY="24.0" prefHeight="71.0" prefWidth="348.0" text="Liste des Reclamation" textFill="#10026b">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

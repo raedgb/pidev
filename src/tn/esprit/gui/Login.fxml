@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="518.0" prefWidth="907.0" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tn.esprit.gui.LoginController">
+   <children>
+      <TextField fx:id="tfemail" layoutX="155.0" layoutY="122.0" prefHeight="45.0" prefWidth="216.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #007b #252C41ff; -fx-border-width: 0px 0px 3px 0px;" />
+      <TextField fx:id="tfpwd" layoutX="154.0" layoutY="202.0" prefHeight="45.0" prefWidth="216.0" promptText="Passwd" style="-fx-background-color: transparent; -fx-border-width: 0px 0px 3px 0px; -fx-border-color: #252C41;" />
+      <Button fx:id="btnlogin" layoutX="154.0" layoutY="345.0" mnemonicParsing="false" onAction="#login" prefHeight="34.0" prefWidth="216.0" style="-fx-background-color: #252C41 #252C41; -fx-text-fill: white; -fx-background-radius: 90;" text="LOGIN">
+         <effect>
+            <Blend mode="ADD" opacity="0.0" />
+         </effect></Button>
+      <Button fx:id="btnsignup" layoutX="154.0" layoutY="420.0" mnemonicParsing="false" onAction="#signup" prefHeight="34.0" prefWidth="216.0" style="-fx-background-color: #252C41; -fx-text-fill: white; -fx-background-radius: 90;" text="SIGNUP" />
+      <HBox layoutX="-4.0" prefHeight="70.0" prefWidth="911.0" style="-fx-background-color: #252C41;">
+         <children>
+            <Label style="-fx-text-fill: white;" text=" Se connecter">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ImageView fitHeight="26.0" fitWidth="31.0" layoutX="107.0" layoutY="145.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/images.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="26.0" fitWidth="26.0" layoutX="107.0" layoutY="212.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/4205924-middle.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="546.0" fitWidth="363.0" layoutX="544.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/326320060_6834295619920511_5414970296368220256_n.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="ForgotPassword" layoutX="155.0" layoutY="272.0" onMouseClicked="#LinkToResetPassword" prefHeight="26.0" prefWidth="134.0" style="-fx-font-size: 13;" text="Forgot Password?" underline="true" />
+   </children>
+</AnchorPane>

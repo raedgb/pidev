@@ -5,6 +5,8 @@
  */
 package tn.esprit.services;
 
+import java.io.File;
+import java.io.IOException;
 import tn.esprit.entity.Reclamation;
 import tn.esprit.tools.MaConnection;
 import java.sql.Connection;
@@ -17,7 +19,16 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
+import javafx.collections.ObservableList;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter ;
+import java.io.FileOutputStream;
+import com.itextpdf.text.Document;
+import java.io.FileNotFoundException;
+import javafx.collections.FXCollections;
 /**
  *
  * @author LENOVO
@@ -59,8 +70,8 @@ public class ReclamationService {
     
   
     
-    public List<Reclamation> afficherReclamation(){
-        List<Reclamation> reclamations = new ArrayList<>();
+public ObservableList<Reclamation> afficherReclamation() {
+        ObservableList<Reclamation> listReclamations = FXCollections.observableArrayList();
         String query="select * from reclamation";
         try {
             PreparedStatement ste = cnx.prepareStatement(query);
@@ -75,14 +86,14 @@ public class ReclamationService {
                 r.setEtat(rs.getString("etat"));
                 r.setDescription(rs.getString("description"));
                 r.setDate_reclamation(rs.getDate("date_reclamation"));
-                reclamations.add(r);
+                listReclamations.add(r);
                 
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         
-        return reclamations;
+        return listReclamations;
         
     }
     
@@ -176,7 +187,7 @@ public class ReclamationService {
 
     public List<Reclamation> findByName(String Nom) {
 
-        List<Reclamation> Reclamation = afficherReclamation();
+        List<Reclamation> Reclamation =  afficherReclamation();
         List<Reclamation> resultat = Reclamation.stream().filter(reclamation -> Nom.equals(reclamation.getNom())).collect(Collectors.toList());
         if (resultat.isEmpty()) {
             System.out.println("Aucun reclamation par ce nom");
@@ -188,6 +199,45 @@ public class ReclamationService {
 
         }
     }
+  public void generatePDF(File file) throws IOException {
+        Document doc = new Document() {};
+        ObservableList<Reclamation> liste = this. afficherReclamation();
 
+        PdfPTable table = new PdfPTable(3);
+        PdfPCell c1 = new PdfPCell(new Phrase("ID"));
+        table.addCell(c1);
+        PdfPCell c2 = new PdfPCell(new Phrase("TITRE"));
+        table.addCell(c2);
+        PdfPCell c3 = new PdfPCell(new Phrase("CONTENU"));
+        table.addCell(c3);
+
+        try {
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream(file.getPath()));
+            doc.open();
+            for (Reclamation item : liste) {
+                int id = item.getId();
+                table.addCell(String.valueOf(id));
+                String nom = item.getNom();
+                table.addCell(nom);
+                String prenom = item.getPrenom();
+                table.addCell(prenom);
+                String email = item.getEmail();
+                table.addCell(email);
+                int tel = item.getTel();
+                table.addCell(String.valueOf(tel));
+                String etat = item.getEtat();
+                table.addCell(etat);
+                String description = item.getDescription();
+                table.addCell(description);
+                Date date_reclamation = item.getDate_reclamation();
+                table.addCell(String.valueOf(date_reclamation));
+
+            }
+            doc.add(table);
+            doc.close();
+            writer.close();
+        } catch (DocumentException | FileNotFoundException e) {
+        }
+    }
 }
 

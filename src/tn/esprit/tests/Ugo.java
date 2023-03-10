@@ -29,17 +29,18 @@ public class Ugo {
           Date d =Date.valueOf(LocalDate.of(2022, Month.MARCH, 17));
         UserService userService= new UserService();
 
-     User user1=new User("raede","raed1","raed11","raed1111",12,d,"raed","raed",conducteur);
-  //userService.ajouter(user1);
-   //userService.modifier(16,user1); 
-// userService.getAll();
-        
+     User user1=new User("raede","raed1","raed11","raed1111",12,d,"azerty","raed",conducteur);
+       
+ //userService.ajouter(user1);
+  userService.modifier(19,user1); 
+  //  userService.getAll();
+
 
 
     Reclamation r = new Reclamation( "raed", "raed", "raed", 42548769,"aa", "en cours",d);
     ReclamationService ps = new ReclamationService();
 
-    ps.ajouterReclamation(r);
+   // ps.ajouterReclamation(r);
     
     //ps.afficherReclamation();
     

@@ -30,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import javax.swing.JOptionPane;
+import org.controlsfx.control.Notifications;
 
 
 /**
@@ -40,7 +41,7 @@ import javax.swing.JOptionPane;
 public class AjouterReclamationController implements Initializable {
 
     ReclamationService rs = new ReclamationService();
-
+ private String selectedReclamationId;
     @FXML
     private TextField tfprenom;
     @FXML
@@ -58,7 +59,7 @@ public class AjouterReclamationController implements Initializable {
     @FXML
     private Button btnajouter;
 
-  //  Notifications no;
+   Notifications no;
     String erreur;
     int id_d;
 
@@ -119,7 +120,7 @@ public class AjouterReclamationController implements Initializable {
             try {
                 rs.ajouterReclamation(u);
 
-               /* no = Notifications.create()
+                no = Notifications.create()
                         .title("Reclamation Ajoutée")
                         .text(erreur)
                         .graphic(null)
@@ -135,7 +136,6 @@ public class AjouterReclamationController implements Initializable {
 
     
 
-    @FXML
     private void modifierReclamation(ActionEvent event) {
 
         StringBuilder errors = new StringBuilder();
@@ -182,10 +182,13 @@ public class AjouterReclamationController implements Initializable {
             ReclamationService ds = new ReclamationService();
             //rs.modifierReclamation(id_d, d);
         }
-
+   
     }
+  
+        
+    
 
-    public void setTextField(int id, String nom, String prenom, String email, String tel, String etat, String description, Date date_reclamation) {
+public void setTextField(int id, String nom, String prenom, String email, String tel, String etat, String description, Date date_reclamation) {
         id_d = id;
         tfnom.setText(nom);
         tfprenom.setText(prenom);
@@ -197,5 +200,7 @@ public class AjouterReclamationController implements Initializable {
         tfdatereclamation.setValue(localDate);
 
     }
+
+    
 
 }

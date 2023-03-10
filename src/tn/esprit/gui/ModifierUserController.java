@@ -20,7 +20,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -28,8 +27,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.util.Duration;
-import org.controlsfx.control.Notifications;
 import tn.esprit.entity.Role;
 import tn.esprit.entity.User;
 import tn.esprit.services.UserService;
@@ -39,10 +36,28 @@ import tn.esprit.services.UserService;
  *
  * @author gabsi
  */
-public class AjouterUserController implements Initializable {
-    
-    
-Notifications no ;
+public class ModifierUserController implements Initializable {
+
+    private String selectedUserId;
+
+    public void initData(String selectedUserId) {
+        this.selectedUserId = selectedUserId;
+        // Get the selected user's data
+        User selectedUser = userService.findByEmail(selectedUserId);
+        if (selectedUser != null) {
+            // Populate the form with the selected user's data
+            tfnom.setText(selectedUser.getNom());
+            tfprenom.setText(selectedUser.getPrenom());
+            tfemail.setText(selectedUser.getEmail());
+            tfpwd.setText(selectedUser.getPwd());
+            tfnum.setText(Integer.toString(selectedUser.getNumTel()));
+            tfadresse.setText(selectedUser.getAdresse());
+            tfsexe.setText(selectedUser.getSexe());
+            tfdate.setValue(selectedUser.getDateNaissc().toLocalDate());
+            comborole.setValue(selectedUser.getRole());
+        }
+    }
+
     @FXML
     private TextField tfnom;
     @FXML
@@ -63,27 +78,26 @@ Notifications no ;
     private DatePicker tfdate;
     @FXML
     private ComboBox<Role> comborole;
-    UserService userService  = new UserService();
-    String   erreur  ;
-List<Role> roleList = Arrays.asList(Role.passager, Role.conducteur, Role.livreur, Role.admin);
+    UserService userService = new UserService();
+    String erreur;
+    List<Role> roleList = Arrays.asList(Role.passager, Role.conducteur, Role.livreur, Role.admin);
     @FXML
     private Button btnback;
-     
-       
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-      // ChoiceBox<Role> comborole = new ChoiceBox<>();
-  comborole.getItems().addAll(roleList);
-
-    }    
+        // ChoiceBox<Role> comborole = new ChoiceBox<>();
+        comborole.getItems().addAll(roleList);
+        initData(selectedUserId);
+    }
 
     @FXML
-    private void ajouter(ActionEvent event) {
-         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
+    private void ajouter(ActionEvent event) throws SQLException {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."
                 + "[a-zA-Z0-9_+&*-]+)*@"
                 + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
                 + "A-Z]{2,7}$";
@@ -110,7 +124,7 @@ List<Role> roleList = Arrays.asList(Role.passager, Role.conducteur, Role.livreur
         if (tfdate.getValue() == null) {
             errors.append("- Please enter a Date\n");
         }
-        if (tfadresse.getText()== null) {
+        if (tfadresse.getText() == null) {
             errors.append("- Please enter a Date\n");
         }
         if (errors.length() > 0) {
@@ -118,60 +132,34 @@ List<Role> roleList = Arrays.asList(Role.passager, Role.conducteur, Role.livreur
             alert.setTitle("Errors");
             alert.setContentText(errors.toString());
             alert.showAndWait();
-        } 
-        else{
-       
-   
-        User u = new User();
-        u.setNom(tfnom.getText());
-        u.setPrenom(tfprenom.getText());
-        u.setEmail(tfemail.getText());
-        u.setPwd(tfpwd.getText());
-        u.setNumTel(Integer.parseInt(tfnum.getText()));
-        u.setDateNaissc(java.sql.Date.valueOf(tfdate.getValue()));
-        u.setAdresse(tfadresse.getText());
-        u.setSexe(tfsexe.getText());
-        u.setRole(comborole.getValue());
-        userService.ajouter(u);
-         try {
-            
-           
+        } else {
 
-                no = Notifications.create()
-                        .title("User Ajoutée")
-                        .text(erreur)
-                        .graphic(null)
-                        .position(Pos.TOP_CENTER)
-                        .hideAfter(Duration.seconds(6));
-                no.showInformation();
-                //     reset();*/
+            User u = new User();
+            u.setNom(tfnom.getText());
+            u.setPrenom(tfprenom.getText());
+            u.setEmail(tfemail.getText());
+            u.setPwd(tfpwd.getText());
+            u.setNumTel(Integer.parseInt(tfnum.getText()));
+            u.setDateNaissc(java.sql.Date.valueOf(tfdate.getValue()));
+            u.setAdresse(tfadresse.getText());
+            u.setSexe(tfsexe.getText());
+            u.setRole(comborole.getValue());
             
-            //navigation
-            Parent loader = FXMLLoader.load(getClass().getResource("Login.fxml"));
-            btnback.getScene().setRoot(loader);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+            User s = userService.findByEmail(selectedUserId);
+            userService.modifier(s.getId(),u);
+            try {
+                //navigation
+                Parent loader = FXMLLoader.load(getClass().getResource("Login.fxml"));
+                btnback.getScene().setRoot(loader);
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
     }
-    
-public void setTextField( String nom, String prenom, String email, String pwd, String numTel, Date dateNaissc, String adresse,String sexe,Role role ) {
-        
-        tfnom.setText(nom);
-        tfprenom.setText(prenom);
-        tfemail.setText(email);
-        tfpwd.setText(pwd);
-        tfnum.setText(numTel);
-        LocalDate localDate = dateNaissc.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        tfdate.setValue(localDate);
-        tfadresse.setText(adresse);
-        tfsexe.setText(sexe);
-        comborole.setValue(role);
-    }   
 
     @FXML
     private void back(ActionEvent event) {
-           try {
+        try {
             //navigation
             Parent loader = FXMLLoader.load(getClass().getResource("Login.fxml"));
             btnback.getScene().setRoot(loader);
@@ -181,6 +169,3 @@ public void setTextField( String nom, String prenom, String email, String pwd, S
     }
 
 }
-    
-    
-

@@ -9,5 +9,8 @@ package tn.esprit.entity;
  * @author gabsi
  */
  public enum Role {
-    passager ,conducteur,livreur ;
+     admin ,
+    passager ,
+    conducteur,
+    livreur ;
 }
